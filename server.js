@@ -2,9 +2,10 @@ var net = require('net')
 var settings = require('./settings.js');
 
 var workmode = 'test'
+console.log('arguments:',process.argv);
 
 var j = process.argv.indexOf('--server');
-if(k>=2){
+if(j>=2){
   workmode = 'server'
 }
 
