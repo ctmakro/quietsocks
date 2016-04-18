@@ -100,9 +100,10 @@ if(workmode=='server'||workmode=='test'){
         return;
       }
     })
-  }).listen(settings.server.socks4port,()=>{
-    console.log('socks4 proxy_server listening on',settings.server.socks4port);
   })
+  // proxy_server.listen(settings.server.socks4port,()=>{
+  //   console.log('socks4 proxy_server listening on',settings.server.socks4port);
+  // })
   //--proxy server ends
 }
 
