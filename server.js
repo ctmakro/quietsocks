@@ -33,9 +33,19 @@ if(workmode=='server'||workmode=='test'){
       connection.on('end',()=>{
         socket.end()
       })
+      connection.on('error',(err)=>{
+        console.log(err);
+        connection.end();
+        socket.end();
+      })
 
       socket.on('end',()=>{
         connection.end()
+      })
+      socket.on('error',()=>{
+        console.log(err);
+        connection.end();
+        socket.end();
       })
     })
   }).listen(settings.server.port,()=>{
@@ -112,9 +122,19 @@ if(workmode=='client'||workmode=='test'){
       connection.on('end',()=>{
         socket.end()
       })
+      connection.on('error',(err)=>{
+        console.log(err);
+        connection.end();
+        socket.end();
+      })
 
       socket.on('end',()=>{
         connection.end()
+      })
+      socket.on('error',()=>{
+        console.log(err);
+        connection.end();
+        socket.end();
       })
     })
   }).listen(settings.client.port,()=>{
