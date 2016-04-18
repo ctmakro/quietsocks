@@ -33,20 +33,20 @@ if(workmode=='server'||workmode=='test'){
       connection.on('end',()=>{
         socket.end()
       })
-      connection.on('error',(err)=>{
-        console.log(err);
-        connection.end();
-        socket.end();
-      })
 
       socket.on('end',()=>{
         connection.end()
       })
-      socket.on('error',()=>{
-        console.log(err);
-        connection.end();
-        socket.end();
-      })
+    })
+    connection.on('error',(err)=>{
+      console.log(err);
+      connection.end();
+      socket.end();
+    })
+    socket.on('error',(err)=>{
+      console.log(err);
+      connection.end();
+      socket.end();
     })
   }).listen(settings.server.port,()=>{
     console.log('relay_server listening on',settings.server.port);
@@ -110,7 +110,10 @@ if(workmode=='client'||workmode=='test'){
 
   //--relay server-- should run on client side
   var relay_server = net.createServer((socket) => {
+    console.log('trying to connect to',settings.client.server_address,'port',settings.client.server_port);
+
     var connection = net.connect(settings.client.server_port,settings.client.server_address,()=>{
+
       connection.on('data',(data)=>{
         socket.write(settings.buffer_decode(data));
       })
@@ -122,20 +125,22 @@ if(workmode=='client'||workmode=='test'){
       connection.on('end',()=>{
         socket.end()
       })
-      connection.on('error',(err)=>{
-        console.log(err);
-        connection.end();
-        socket.end();
-      })
 
       socket.on('end',()=>{
         connection.end()
       })
-      socket.on('error',()=>{
-        console.log(err);
-        connection.end();
-        socket.end();
-      })
+    })
+
+    connection.on('error',(err)=>{
+      console.log(err);
+      connection.end();
+      socket.end();
+    })
+
+    socket.on('error',(err)=>{
+      console.log(err);
+      connection.end();
+      socket.end();
     })
   }).listen(settings.client.port,()=>{
     console.log('relay_server(client side) listening on',settings.client.port);
