@@ -21,7 +21,11 @@ if(workmode=='server'||workmode=='test'){
 
   //--relay server-- should run on VPS side
   var relay_server = net.createServer((socket) => {
-    var connection = net.connect(settings.server.socks4port,'127.0.0.1',()=>{
+    var socketid = Date.now().toString();
+    console.log(socketid,'trying to connect to localhost',settings.server.socksport);
+
+    var connection = net.connect(settings.server.socksport,'127.0.0.1',()=>{
+      console.log(socketid, 'Established');
       connection.on('data',(data)=>{
         socket.write(settings.buffer_encode(data));
       })
@@ -51,70 +55,17 @@ if(workmode=='server'||workmode=='test'){
   }).listen(settings.server.port,()=>{
     console.log('relay_server listening on',settings.server.port);
   })
-
-  //--socks4 server-- should run on VPS side
-  var proxy_server = net.createServer();
-  proxy_server.on('connection',(socket)=>{
-    socket.once('data',(buffer)=>{
-      try{
-        if(buffer[0]!=4)throw 'client not socks4';
-        if(buffer[1]!=1)throw 'action not CONNECT';
-
-        var dstport = buffer[2]*256+buffer[3];
-        var dstip = buffer[4].toString()+'.'+buffer[5].toString()+'.'
-        +buffer[6].toString()+'.'+buffer[7].toString();
-        var connection = net.createConnection(dstport,dstip);
-        var socks4ready = false;
-
-        connection.on('connect',()=>{
-          console.log('Established:',dstip+':'+dstport);
-          socket.write(new Buffer([0,90,0,0,1,0,0,0])) // inform client for a successful connection
-          socks4ready = true;
-
-          socket.pipe(connection); //let both sides communicate with each other
-          connection.pipe(socket);
-        })
-
-        connection.on('error',(err)=>{
-          console.log('connection error...');console.log(err);
-        })
-
-        socket.on('error',(err)=>{
-          console.log('client error...');console.log(err);
-        })
-
-        connection.on('close',(err)=>{
-          if(!socks4ready){
-            socket.write(new Buffer([0,91,0,0,1,0,0,0])) //inform client the connection cant be opened
-          }
-          socket.end();
-        })
-
-        socket.on('close',(err)=>{
-          connection.end();
-        })
-      }
-      catch(err){
-        console.log(err);
-        socket.end();
-        return;
-      }
-    })
-  })
-  // proxy_server.listen(settings.server.socks4port,()=>{
-  //   console.log('socks4 proxy_server listening on',settings.server.socks4port);
-  // })
-  //--proxy server ends
 }
 
 if(workmode=='client'||workmode=='test'){
 
   //--relay server-- should run on client side
   var relay_server = net.createServer((socket) => {
-    console.log('trying to connect to',settings.client.server_address,'port',settings.client.server_port);
+    var socketid = Date.now().toString();
+    console.log(socketid,'trying to connect to',settings.client.server_address,'port',settings.client.server_port);
 
     var connection = net.connect(settings.client.server_port,settings.client.server_address,()=>{
-
+      console.log(socketid, 'Established');
       connection.on('data',(data)=>{
         socket.write(settings.buffer_decode(data));
       })
@@ -148,7 +99,7 @@ if(workmode=='client'||workmode=='test'){
   })
 
 }
-process.openStdin().on('data',function(d){ //press enter in console to restart
+process.openStdin().on('data',function(d){ //press enter in console to end current process
   if(d.toString().trim()=='')
   process.exit();
 });

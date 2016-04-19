@@ -8,7 +8,7 @@ settings.client = {
 
 settings.server = {
   port : 8338,
-  socks4port : 8228, //occupy a port...
+  socksport : 8228, //occupy a port...
 }
 
 settings.buffer_encode = function(buffer){
