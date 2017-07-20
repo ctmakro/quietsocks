@@ -4,7 +4,7 @@
   "description": "thru wall",
   "main": "server.js",
   "dependencies": {
-    "socks4": "^0.1.1"
+    "socksv5": "0.0.6"
   },
   "devDependencies": {},
   "scripts": {

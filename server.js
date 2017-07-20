@@ -1,6 +1,6 @@
 var net = require('net')
 var settings = require('./settings.js');
-var socks4 = require('socks4')
+var socks5 = require('socksv5')
 
 var print = console.log
 
@@ -31,24 +31,15 @@ function time_string(){return new Date().toUTCString()}
 
 if(workmode=='server'||workmode=='test'){
 
-  //--socks4 server-- to simplify things
-  var s4 = socks4.createServer()
-  s4.on('connect',req=>{
-    req.accept();
-    var remote = s4.proxyRequest(req); // 'true' to pipe error to client.
-    remote.on('error',err=>{
-      print(`[socks4] socket error`)
-      print(err)
-    })
-    print(`[socks4] accept and proxy request to ${req.host}:${req.port}`)
+  //--socks5 server-- to simplify things
+  var s5 = socks5.createServer(function(info,accept,deny){
+    accept();
+    print(`[socks5] accept and proxy request to ${info.dstAddr}:${info.dstPort}`)
   })
-  s4.on('error',err=>{
-    print(`[socks4] (FATAL) server error`)
-    print(err)
-  })
-  s4.listen(settings.server.socksport,()=>{
-    print(`[socks4] proxy created on port ${settings.server.socksport}`)
+  s5.listen(settings.server.socksport,'0.0.0.0',()=>{
+    print(`[socks5] proxy created on port ${settings.server.socksport}`)
   });
+  s5.useAuth(socks5.auth.None());
 
   //--relay server-- should run on VPS side
   var relay_server = net.createServer((socket) => {
