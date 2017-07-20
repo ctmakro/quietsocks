@@ -1,7 +1,7 @@
 var settings = {};
 
 var client_port = 8118; // 浏览器socks4代理指向这个端口
-var relay_port = 8338; // 客户端和服务器上这个端口要开放
+var relay_port = 8338; // 服务器上这个端口要允许传入
 
 settings.client = {
   port : client_port,
