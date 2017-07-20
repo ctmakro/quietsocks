@@ -9,9 +9,9 @@ Very few lines of code!
 这软件当然是为了翻墙，毕竟党是领导一切的，法律也要在党的范围内行使权力
 
 1. 按照下面Installation的指示，在本地和VPS上都安装quietsocks
-2. 本地运行`node server.js`，然后把浏览器SOCKS5代理指向`localhost:8118`，看看能否访问百度。按回车可以退出。
+2. 测试安装是否成功：在本地运行`node server.js`，然后把浏览器SOCKS5代理指向`localhost:8118`，看看能否访问百度。按回车可以退出。
 3. 在VPS上运行`node server.js --server`，同时VPS对外要开放8338端口
-4. 在本地运行`node server.js --connect {VPS的地址}`，这个地址可以是域名或IP
+4. 在本地运行`node server.js --connect {VPS的地址}`，此处地址可以是域名或IP
 5. 按个人需求修改 settings.js, 通过人民群众的无穷创造力让GFW摸不着头脑
 
 ## Explain
